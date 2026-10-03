@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Aegis Digital — Guias de segurança digital, alertas sobre golpes e verificação educativa de sites, por Douglas Gonçalves Sales.">
+<title>Aegis Digital — Segurança digital para pessoas e empresas</title>
+<style>
+:root{
+  --bg:#070d1a;--surface:#0d1729;--surface2:#111e35;--border:#1e2d47;
+  --accent:#2dd4bf;--accent2:#38bdf8;--text:#e2e8f0;--muted:#a3b1c6;
+  --ok:#34d399;--warn:#fbbf24;--danger:#f87171;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.6;}
+a{color:var(--accent2);text-decoration:none;}
+a:hover{color:var(--accent);}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.skip{position:absolute;left:-999px;top:0;background:var(--accent);color:#06231f;padding:8px 14px;z-index:100;}
+.skip:focus{left:8px;top:8px;}
+
+/* NAV */
+.navwrap{position:sticky;top:0;z-index:50;background:rgba(7,13,26,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+.navinner{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;align-items:center;padding:14px 16px;gap:10px;}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:.3px;cursor:pointer;background:none;border:none;color:var(--text);}
+.logo span{color:var(--accent);}
+.navlinks{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;}
+.navbtn{background:transparent;color:var(--muted);border:1px solid transparent;padding:7px 12px;border-radius:8px;font-size:13px;cursor:pointer;transition:all .2s;}
+.navbtn:hover{color:var(--text);border-color:var(--border);background:rgba(255,255,255,.03);}
+.navbtn.active{color:#06231f;background:var(--accent);font-weight:600;border-color:var(--accent);}
+
+.page{display:none;max-width:1100px;margin:0 auto;padding:32px 16px 56px;}
+.page.active{display:block;}
+
+.hero{background:linear-gradient(135deg,#0d1729 0%,#0a1f33 50%,#0d2824 100%);border:1px solid var(--border);border-radius:18px;padding:44px 24px;text-align:center;margin-bottom:32px;}
+.eyebrow{display:inline-block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;font-weight:700;}
+.hero h1{font-size:clamp(26px,5vw,40px);margin:0 0 14px;font-weight:800;line-height:1.25;}
+.hero h1 span{color:var(--accent);}
+.hero p{color:var(--muted);max-width:640px;margin:0 auto 24px;font-size:15px;}
+.btn{display:inline-block;background:var(--accent);color:#06231f;font-weight:700;padding:13px 26px;border-radius:10px;border:1px solid var(--accent);cursor:pointer;font-size:14px;transition:transform .15s,box-shadow .15s;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(45,212,191,.3);color:#06231f;}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn2{background:transparent;color:var(--accent);margin-left:10px;}
+.btn2:hover{color:var(--accent);}
+
+.grid{display:grid;gap:20px;}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;transition:border-color .2s,transform .2s;}
+.card:hover{border-color:var(--accent);}
+.card.link{cursor:pointer;}
+.card.link:hover{transform:translateY(-2px);}
+.card h3{margin:0 0 10px;font-size:16px;display:flex;align-items:center;gap:8px;}
+.card p{margin:0;color:var(--muted);font-size:13.5px;}
+.icon{width:20px;height:20px;flex-shrink:0;}
+h2.sec{font-size:26px;font-weight:800;margin:0 0 8px;}
+h2.sec span{color:var(--accent);}
+h3.sub2{font-size:17px;margin:28px 0 14px;}
+.sub{color:var(--muted);font-size:14px;margin:0 0 24px;}
+
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap;}
+.b-ok{background:rgba(52,211,153,.15);color:var(--ok);border:1px solid rgba(52,211,153,.3);}
+.b-warn{background:rgba(251,191,36,.15);color:var(--warn);border:1px solid rgba(251,191,36,.3);}
+.b-danger{background:rgba(248,113,113,.15);color:var(--danger);border:1px solid rgba(248,113,113,.3);}
+.b-info{background:rgba(56,189,248,.15);color:var(--accent2);border:1px solid rgba(56,189,248,.3);}
+
+.scannerbox{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px;margin-bottom:24px;}
+.scaninput{display:flex;gap:10px;flex-wrap:wrap;}
+.scaninput input{flex:1;min-width:200px;background:#070d1a;border:1px solid var(--border);color:var(--text);padding:13px 15px;border-radius:10px;font-size:14px;}
+.scaninput input:focus{border-color:var(--accent);outline:none;}
+.progresswrap{background:#070d1a;border-radius:999px;height:10px;overflow:hidden;margin:18px 0 0;display:none;}
+.progressbar{height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .3s;}
+.resultbox{display:none;}
+.summary{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:8px;}
+.sumitem{text-align:center;min-width:130px;}
+.sumitem .n{font-size:34px;font-weight:800;line-height:1.1;}
+.sumitem .l{font-size:12.5px;color:var(--muted);}
+.checkrow{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);}
+.checkrow:last-child{border-bottom:none;}
+.checkicon{width:22px;height:22px;flex-shrink:0;margin-top:2px;}
+.checktxt{flex:1;min-width:0;}
+.checktxt .t{font-weight:600;font-size:14px;}
+.checktxt .t small{color:#7c8ba1;font-weight:400;font-size:11.5px;}
+.checktxt .d{color:var(--muted);font-size:12.5px;margin-top:3px;}
+.checktxt .fix{font-size:12.5px;margin-top:8px;padding:10px 12px;background:rgba(45,212,191,.08);border-left:3px solid var(--accent);border-radius:4px;color:#a7f3d0;}
+.checktxt code,.fix code{background:#070d1a;padding:1px 6px;border-radius:4px;font-size:12px;word-break:break-word;}
+.toolbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--muted);margin-top:14px;cursor:pointer;}
+.consent input{margin-top:3px;width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;}
+.scorecircle{width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;margin:0 auto;border:6px solid var(--accent);color:var(--accent);}
+.gradeline{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:14px;font-weight:700;font-size:15px;flex-wrap:wrap;}
+.grade{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;border:2px solid var(--accent);font-size:18px;}
+.faqitem{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.faqq{width:100%;text-align:left;background:none;border:none;color:var(--text);padding:15px 18px;cursor:pointer;font-weight:600;font-size:14px;font-family:inherit;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.faqq:hover{background:var(--surface2);}
+.faqa{padding:0 18px;max-height:0;overflow:hidden;transition:max-height .3s;color:var(--muted);font-size:13.5px;}
+.faqitem.open .faqa{max-height:700px;padding-bottom:16px;}
+.arrow{transition:transform .3s;color:var(--accent);flex-shrink:0;}
+.faqitem.open .arrow{transform:rotate(180deg);}
+
+.timeline{position:relative;padding-left:28px;border-left:2px solid var(--border);margin-left:6px;}
+.tlitem{position:relative;margin-bottom:22px;}
+.tlitem::before{content:'';position:absolute;left:-35px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(45,212,191,.2);}
+.tlitem h4{margin:0 0 5px;font-size:15px;}
+.tlitem p{margin:0;color:var(--muted);font-size:13px;}
+
+.certcard{background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:16px;}
+.certcard .year{color:var(--accent);font-weight:700;font-size:12.5px;letter-spacing:.5px;}
+.certcard h3{margin:6px 0 8px;font-size:17px;}
+.certcard p{margin:0;color:var(--muted);font-size:13px;}
+
+.contactbox{background:linear-gradient(135deg,#0d1729,#0a2530);border:1px solid var(--accent);border-radius:16px;padding:32px;text-align:center;}
+.email{font-size:20px;font-weight:700;color:var(--accent);word-break:break-all;}
+
+footer{background:#050a14;border-top:1px solid var(--border);padding:32px 16px;text-align:center;color:var(--muted);font-size:12.5px;}
+footer .links{margin-bottom:10px;}
+footer .links a{margin:0 6px;}
+
+.stat{text-align:center;padding:20px 16px;}
+.stat .num{font-size:28px;font-weight:800;color:var(--accent);margin-bottom:4px;}
+.stat .lbl{font-size:12.5px;color:var(--muted);}
+
+.note,.warnbox,.okbox{padding:14px 16px;border-radius:8px;font-size:13px;margin:18px 0;}
+.note{background:rgba(56,189,248,.08);border-left:3px solid var(--accent2);color:#bae6fd;}
+.warnbox{background:rgba(251,191,36,.08);border-left:3px solid var(--warn);color:#fde68a;}
+.okbox{background:rgba(52,211,153,.08);border-left:3px solid var(--ok);color:#a7f3d0;}
+ul.clean{margin:10px 0 0;padding-left:20px;color:var(--muted);font-size:13.5px;}
+ul.clean li{margin-bottom:8px;}
+
+@media(max-width:640px){
+  .hero{padding:28px 18px;}
+  .navbtn{padding:6px 10px;font-size:12.5px;}
+  .btn2{margin-left:0;margin-top:10px;}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}}
+</style>
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="navwrap">
+  <div class="navinner">
+    <button class="logo" data-p="inicio" aria-label="Aegis Digital — ir para o início">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+      <div>Aegis <span>Digital</span></div>
+    </button>
+    <nav class="navlinks" aria-label="Navegação principal">
+      <button class="navbtn active" data-p="inicio">Início</button>
+      <button class="navbtn" data-p="scanner">Verificador</button>
+      <button class="navbtn" data-p="seguranca">Segurança</button>
+      <button class="navbtn" data-p="golpes">Golpes</button>
+      <button class="navbtn" data-p="mitos">Mitos e Verdades</button>
+      <button class="navbtn" data-p="sobre">Sobre</button>
+      <button class="navbtn" data-p="contato">Contato</button>
+    </nav>
+  </div>
+</header>
+
+<main id="conteudo">
+
+<!-- INÍCIO -->
+<section class="page active" id="p-inicio">
+  <div class="hero">
+    <div class="eyebrow">Segurança digital acessível</div>
+    <h1>Entenda os riscos.<br><span>Proteja o que importa.</span></h1>
+    <p>Guias claros, alertas sobre golpes e um verificador educativo para o seu site — sem jargões e sem complicação. Conhecimento que protege, nunca que ataca.</p>
+    <button class="btn" data-p="scanner">Verificar meu site</button>
+    <button class="btn btn2" data-p="sobre">Conheça o especialista</button>
+  </div>
+
+  <div class="grid g3" style="margin-bottom:36px;">
+    <div class="stat card"><div class="num">15</div><div class="lbl">Pontos analisados em cada site</div></div>
+    <div class="stat card"><div class="num">10</div><div class="lbl">Golpes comuns detalhados</div></div>
+    <div class="stat card"><div class="num">10</div><div class="lbl">Mitos e verdades esclarecidos</div></div>
+    <div class="stat card"><div class="num">24h</div><div class="lbl">Prazo de resposta (análise por e-mail)</div></div>
+  </div>
+
+  <h2 class="sec">O que você encontra <span>aqui</span></h2>
+  <p class="sub">Tudo organizado para você entender, verificar e proteger — do básico ao avançado.</p>
+
+  <div class="grid g2" style="margin-bottom:28px;">
+    <div class="card link" data-p="scanner">
+      <h3><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>Verificador de Sites</h3>
+      <p>Análise real de HTTPS, certificado, cabeçalhos de segurança e cookies, com nota, explicação e correção de cada ponto.</p>
+    </div>
+    <div class="card link" data-p="seguranca">
+      <h3><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Guia de Segurança</h3>
+      <p>Como proteger contas, aparelhos e dados, o que observar e o que fazer se algo der errado.</p>
+    </div>
+    <div class="card link" data-p="golpes">
+      <h3><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" aria-hidden="true"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>Golpes Comuns</h3>
+      <p>Os golpes que mais vitimam pessoas no Brasil: como funcionam, como identificar e o que fazer.</p>
+    </div>
+    <div class="card link" data-p="mitos">
+      <h3><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg>Mitos e Verdades</h3>
+      <p>As crenças mais comuns sobre segurança digital: o que realmente protege e o que é só ilusão.</p>
+    </div>
+  </div>
+
+  <div class="note"><strong>Compromisso ético:</strong> a análise é passiva: lemos apenas o que o site entrega publicamente a qualquer visitante, com poucas requisições. Não realizamos ataques, não tentamos adivinhar arquivos e não acessamos dados privados. Testes mais profundos exigem autorização formal do proprietário do site — veja a página de Contato.</div>
+</section>
+
+<!-- VERIFICADOR -->
+<section class="page" id="p-scanner">
+  <h2 class="sec">Verificador de <span>Sites</span></h2>
+  <p class="sub">Análise passiva e gratuita: abrimos a página inicial do site como um visitante comum e avaliamos HTTPS, certificado, cabeçalhos de segurança e cookies. Cada resultado vem com explicação e correção.</p>
+
+  <div class="scannerbox">
+    <label for="urlInput" style="font-size:13px;color:var(--muted);display:block;margin-bottom:10px;">Digite o endereço do site que você possui ou tem autorização para verificar:</label>
+    <form id="scanForm" novalidate>
+      <div class="scaninput">
+        <input type="text" id="urlInput" placeholder="https://seusite.com.br" autocomplete="off" inputmode="url">
+        <button class="btn" id="scanBtn" type="submit">Verificar agora</button>
+      </div>
+      <label class="consent"><input type="checkbox" id="authBox"> <span>Declaro que sou o proprietário deste site ou tenho autorização para verificá-lo.</span></label>
+    </form>
+    <div class="warnbox" id="urlWarn" role="alert" style="display:none;margin-top:14px;"></div>
+    <div class="progresswrap" id="progressWrap"><div class="progressbar" id="progressBar"></div></div>
+  </div>
+
+  <!-- Resultado da análise real (via servidor) -->
+  <div class="resultbox" id="apiBox" aria-live="polite">
+    <div class="card" style="margin-bottom:24px;text-align:center;">
+      <div style="color:var(--muted);font-size:13px;margin-bottom:12px;">Resultado para <strong id="apiHost" style="color:var(--text);"></strong></div>
+      <div class="scorecircle" id="apiScore">--</div>
+      <div class="gradeline"><span id="apiGrade" class="grade">-</span><span id="apiLabel"></span></div>
+      <div class="summary" style="margin-top:18px;">
+        <div class="sumitem"><div class="n" id="apiOk" style="color:var(--ok);">0</div><div class="l">Aprovados</div></div>
+        <div class="sumitem"><div class="n" id="apiWarn" style="color:var(--warn);">0</div><div class="l">A melhorar</div></div>
+        <div class="sumitem"><div class="n" id="apiFail" style="color:var(--danger);">0</div><div class="l">Falhas</div></div>
+      </div>
+      <div id="apiMeta" style="color:#7c8ba1;font-size:12px;margin-top:12px;"></div>
+    </div>
+    <div id="apiGroups"></div>
+    <div class="note" style="margin-top:24px;"><strong>Quer uma análise mais profunda?</strong> Esta verificação é passiva e cobre apenas o que a página inicial entrega publicamente. Para testes autorizados de exposição de arquivos, formulários e configuração, escreva para <a href="mailto:douglassales890@gmail.com">douglassales890@gmail.com</a> com a URL e a confirmação de autorização.</div>
+  </div>
+
+  <!-- Modo básico (quando o servidor de análise não está disponível) -->
+  <div class="resultbox" id="resultBox" aria-live="polite">
+    <div class="warnbox" id="offlineBanner" style="margin-top:0;"></div>
+    <div class="card" style="margin-bottom:24px;text-align:center;">
+      <div style="color:var(--muted);font-size:13px;margin-bottom:12px;">Resultado para <strong id="scoreUrl" style="color:var(--text);"></strong></div>
+      <div class="summary">
+        <div class="sumitem"><div class="n" id="nOk" style="color:var(--ok);">0</div><div class="l">Verificações automáticas aprovadas</div></div>
+        <div class="sumitem"><div class="n" id="nBad" style="color:var(--danger);">0</div><div class="l">Alertas encontrados</div></div>
+        <div class="sumitem"><div class="n" id="nManual" style="color:var(--warn);">0</div><div class="l">Itens para conferir no servidor</div></div>
+      </div>
+      <div id="scoreLabel" style="font-weight:700;font-size:15px;margin-top:10px;"></div>
+    </div>
+    <h3 class="sub2" style="margin-top:0;">1. Verificações automáticas (URL e domínio)</h3>
+    <div class="card" id="autoList"></div>
+    <h3 class="sub2">2. Checklist do servidor (não testado neste modo)</h3>
+    <div class="card" id="manualList"></div>
+    <h3 class="sub2">3. Teste de verdade com ferramentas públicas</h3>
+    <div class="card"><p>Abrem em nova aba:</p><div class="toolbtns" id="toolBtns"></div></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:28px;">
+    <div class="card">
+      <h3><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>O que esta ferramenta faz</h3>
+      <ul class="clean">
+        <li>Faz poucas requisições GET à página inicial, como um navegador</li>
+        <li>Confere HTTPS, certificado, validade, TLS e redirecionamento</li>
+        <li>Avalia cabeçalhos de segurança, cookies e conteúdo misto</li>
+        <li>Identifica-se como <em>AegisDigitalScanner</em> nos logs do seu servidor</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>O que ela NÃO faz</h3>
+      <ul class="clean">
+        <li>Não ataca nem explora falhas</li>
+        <li>Não tenta adivinhar arquivos, pastas ou senhas</li>
+        <li>Não envia formulários nem dados ao site</li>
+        <li>Não armazena os resultados da análise</li>
+        <li>Não verifica sites internos, IPs ou portas não padrão</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SEGURANÇA -->
+<section class="page" id="p-seguranca">
+  <h2 class="sec">Guia de <span>Segurança</span></h2>
+  <p class="sub">Conhecimento prático para proteger você, sua família e seus dados. Pequenos hábitos que evitam grandes problemas.</p>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Senhas e autenticação</h3>
+      <ul class="clean">
+        <li><strong>Prefira tamanho:</strong> use frases longas (14+ caracteres). Nunca use dados pessoais.</li>
+        <li><strong>Uma senha por conta:</strong> use um gerenciador de senhas confiável.</li>
+        <li><strong>Verificação em duas etapas (2FA):</strong> ative em e-mail, banco e redes sociais, de preferência com app autenticador.</li>
+        <li><strong>Nunca compartilhe senhas ou códigos</strong>, nem com quem diz ser do banco ou da polícia.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Navegação segura</h3>
+      <ul class="clean">
+        <li>O cadeado (HTTPS) só indica conexão criptografada — não prova que o site é honesto.</li>
+        <li>Desconfie de promoções boas demais: geralmente são iscas.</li>
+        <li>Baixe programas apenas de fontes oficiais.</li>
+        <li>Mantenha navegador e sistema sempre atualizados.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg>Dispositivos móveis</h3>
+      <ul class="clean">
+        <li>Bloqueie a tela com senha, PIN ou biometria.</li>
+        <li>Instale apps apenas pelas lojas oficiais.</li>
+        <li>Revise permissões: uma lanterna não precisa dos seus contatos.</li>
+        <li>Ative o rastreamento remoto (Encontre Meu Dispositivo / Buscar iPhone).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" aria-hidden="true"><path d="M5 12.55a11 11 0 0 1 14 0M8.5 16a6 6 0 0 1 7 0M12 20h.01M1.4 9a16 16 0 0 1 21.2 0"/></svg>Redes Wi-Fi</h3>
+      <ul class="clean">
+        <li>Evite Wi-Fi público para banco e compras; use dados móveis.</li>
+        <li>Troque a senha padrão do administrador do roteador.</li>
+        <li>Use WPA2 ou WPA3 — nunca deixe a rede aberta.</li>
+        <li>Desative o WPS, que é uma brecha conhecida.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Backup — sua rede de segurança</h3>
+      <ul class="clean">
+        <li>Regra 3-2-1: 3 cópias, 2 tipos de mídia, 1 fora de casa (nuvem).</li>
+        <li>Teste a restauração de tempos em tempos.</li>
+        <li>Fotos, documentos e contatos devem estar em pelo menos dois lugares.</li>
+        <li>Contra ransomware, o backup evita a necessidade de pagar resgate.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4m0 4h.01"/></svg>Sinais de alerta</h3>
+      <ul class="clean">
+        <li>Aparelho lento ou quente sem motivo → pode haver algo rodando escondido.</li>
+        <li>Acessos de lugares onde você não esteve → troque a senha e ative o 2FA.</li>
+        <li>Cobranças desconhecidas → bloqueie o cartão e conteste.</li>
+        <li>Amigos recebem mensagens que você não enviou → conta comprometida.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="okbox" style="margin-top:28px;"><strong>Resumo:</strong> senha única e longa + 2FA ligado + atualizações em dia + backup testado + desconfiança do que parece fácil demais. Esses hábitos reduzem de forma muito significativa os riscos do dia a dia.</div>
+</section>
+
+<!-- GOLPES -->
+<section class="page" id="p-golpes">
+  <h2 class="sec">Golpes mais <span>comuns</span></h2>
+  <p class="sub">Conhecer o golpe é a melhor forma de não cair nele. Toque em cada item para ver detalhes.</p>
+  <div id="golpesList"></div>
+  <div class="warnbox" style="margin-top:28px;"><strong>Caiu em um golpe?</strong> Contate imediatamente o seu banco (se houve dinheiro envolvido), registre um boletim de ocorrência (muitos estados aceitam online) e avise seus contatos se seu número ou conta foi usado. Quanto mais rápido agir, menor o prejuízo.</div>
+</section>
+
+<!-- MITOS -->
+<section class="page" id="p-mitos">
+  <h2 class="sec">Mitos <span>e</span> Verdades</h2>
+  <p class="sub">O que muita gente acredita, mas não é bem assim. Conhecimento correto é proteção real.</p>
+  <div id="mitosList"></div>
+</section>
+
+<!-- SOBRE -->
+<section class="page" id="p-sobre">
+  <h2 class="sec">Sobre o <span>especialista</span></h2>
+  <p class="sub">Quem está por trás deste projeto e qual é a missão.</p>
+
+  <div class="card" style="margin-bottom:28px;">
+    <h3 style="font-size:20px;">Douglas Gonçalves Sales</h3>
+    <p style="margin-top:6px;">Cibersegurança · Análise · Pesquisa em defesa</p>
+    <p style="margin-top:16px;font-size:14px;">Acredito que o conhecimento em segurança digital deve ser usado para <strong style="color:var(--accent);">proteger pessoas</strong>. Estudo como os ataques funcionam para entender onde estão as brechas e ajudar cada pessoa e cada site a fechá-las antes que alguém mal-intencionado o faça.</p>
+    <p style="margin-top:12px;font-size:14px;">Este projeto nasce dessa missão: <strong style="color:var(--accent);">tornar a segurança acessível</strong>, em linguagem simples. Verificar, explicar, orientar — e nunca atacar.</p>
+  </div>
+
+  <h3 class="sub2">Certificações e formação</h3>
+  <div class="certcard">
+    <div class="year">MARÇO / 2025 · IBM + COURSERA</div>
+    <h3>IBM Cybersecurity Analyst Professional Certificate</h3>
+    <p>Certificado profissional emitido pela IBM em parceria com a Coursera. Cobre fundamentos de análise de cibersegurança, detecção de ameaças, proteção de sistemas e resposta a incidentes.</p>
+  </div>
+  <div class="certcard">
+    <div class="year">OUTUBRO / 2026 · OFFENSIVE SECURITY</div>
+    <h3>OSCP — Offensive Security Certified Professional</h3>
+    <p>Certificação prática em testes de penetração, aplicada aqui com propósito defensivo: conhecer o ataque para defender melhor.</p>
+    <!-- Dica: adicione aqui o link público de verificação da credencial (OffSec / Credly), se houver. -->
+  </div>
+
+  <h3 class="sub2">Minha forma de trabalhar</h3>
+  <div class="timeline">
+    <div class="tlitem"><h4>Estudar a fundo</h4><p>Entender cada mecanismo de ataque para saber como se defender.</p></div>
+    <div class="tlitem"><h4>Testar só com autorização</h4><p>Sempre em ambientes controlados ou com permissão formal do proprietário.</p></div>
+    <div class="tlitem"><h4>Identificar as falhas</h4><p>Mapear onde os sistemas estão vulneráveis.</p></div>
+    <div class="tlitem"><h4>Corrigir e ensinar</h4><p>Fechar as brechas e compartilhar o conhecimento para proteger mais pessoas.</p></div>
+  </div>
+
+  <div class="okbox" style="margin-top:28px;"><strong>Compromisso:</strong> todo conhecimento aqui é aplicado para o bem — nunca para atacar, explorar ou prejudicar.</div>
+</section>
+
+<!-- CONTATO -->
+<section class="page" id="p-contato">
+  <h2 class="sec">Análise <span>profunda</span></h2>
+  <p class="sub">Para uma verificação completa e autorizada do seu site, com relatório detalhado e orientações personalizadas.</p>
+
+  <div class="contactbox">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="1.5" style="margin-bottom:14px;" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+    <div style="font-size:15px;color:var(--muted);margin-bottom:10px;">Envie por e-mail:</div>
+    <a class="email" href="mailto:douglassales890@gmail.com?subject=Solicita%C3%A7%C3%A3o%20de%20an%C3%A1lise%20-%20Aegis%20Digital">douglassales890@gmail.com</a>
+    <p style="color:var(--muted);font-size:13.5px;margin:16px auto 0;max-width:520px;">Inclua a URL do site e a <strong style="color:var(--text);">confirmação de que você é o dono ou tem autorização por escrito</strong>. Resposta em até 24h.</p>
+  </div>
+
+  <h3 class="sub2">O que inclui a análise</h3>
+  <div class="grid g2">
+    <div class="card"><h3>Cabeçalhos de segurança</h3><p>Todos os cabeçalhos testados e explicados, com configuração pronta para aplicar.</p></div>
+    <div class="card"><h3>Mapeamento de exposições</h3><p>Arquivos, pastas e informações que não deveriam estar públicas.</p></div>
+    <div class="card"><h3>Formulários e entrada de dados</h3><p>Boas práticas e riscos nos pontos onde dados entram no site.</p></div>
+    <div class="card"><h3>Relatório priorizado</h3><p>O que corrigir primeiro, o que pode esperar e como fazer cada correção.</p></div>
+  </div>
+
+  <div class="note" style="margin-top:28px;"><strong>Importante:</strong> análises profundas só são realizadas com autorização formal do proprietário. É questão de ética e de lei — e é o que diferencia um protetor de um invasor.</div>
+</section>
+
+</main>
+
+<footer>
+  <div class="links">
+    <a href="#inicio" data-p="inicio">Início</a>·<a href="#scanner" data-p="scanner">Verificador</a>·<a href="#seguranca" data-p="seguranca">Segurança</a>·<a href="#golpes" data-p="golpes">Golpes</a>·<a href="#mitos" data-p="mitos">Mitos e Verdades</a>·<a href="#sobre" data-p="sobre">Sobre</a>·<a href="#contato" data-p="contato">Contato</a>
+  </div>
+  <div>Análises profundas: <a href="mailto:douglassales890@gmail.com">douglassales890@gmail.com</a></div>
+  <div style="margin-top:12px;">© 2026 Aegis Digital — Douglas Gonçalves Sales. Conhecimento aplicado para proteger.</div>
+  <div style="margin-top:6px;color:#7c8ba1;">Conteúdo educativo. Uso responsável e somente em sites próprios ou autorizados.</div>
+</footer>
+
+<script>
+(function(){
+  /* ---------- Navegação ---------- */
+  var pages = document.querySelectorAll('.page');
+  var navbtns = document.querySelectorAll('.navbtn');
+  function goPage(id, push){
+    if(!document.getElementById('p-'+id)) id = 'inicio';
+    pages.forEach(function(p){ p.classList.toggle('active', p.id === 'p-'+id); });
+    navbtns.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-p') === id); });
+    if(push !== false && location.hash !== '#'+id){ history.pushState(null,'','#'+id); }
+    window.scrollTo(0,0);
+  }
+  document.addEventListener('click', function(e){
+    var el = e.target.closest('[data-p]');
+    if(!el) return;
+    e.preventDefault();
+    goPage(el.getAttribute('data-p'));
+  });
+  window.addEventListener('popstate', function(){ goPage(location.hash.slice(1) || 'inicio', false); });
+  if(location.hash){ goPage(location.hash.slice(1), false); }
+
+  /* ---------- Acordeão ---------- */
+  document.addEventListener('click', function(e){
+    var q = e.target.closest('.faqq');
+    if(!q) return;
+    var item = q.parentElement;
+    var open = item.classList.toggle('open');
+    q.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  /* ---------- Golpes ---------- */
+  var golpes = [
+    {t:"Phishing (isca por e-mail, SMS ou mensagem)", d:"Mensagem que imita banco, Correios, streaming etc. e pede para clicar em um link e digitar dados. O site é parecido com o original, mas é falso.", i:"Erros de português, remetente estranho, tom de urgência, link com domínio diferente do oficial.", f:"Não clique nem responda. Acesse o serviço digitando o endereço você mesmo. Se digitou dados, troque a senha e avise o banco."},
+    {t:"Golpe do Pix", d:"Cobrança Pix falsa, pedido para \"testar\" uma transferência ou envio de comprovante falso.", i:"Comprovante em imagem não prova pagamento; confira sempre o extrato do seu banco e o nome do recebedor antes de confirmar.", f:"Só transfira após confirmar a identidade de quem recebe por um canal que você já conhecia."},
+    {t:"Falso suporte técnico / atendente", d:"Ligação ou mensagem dizendo que seu aparelho foi invadido ou que há problema na conta, pedindo acesso remoto ou código de verificação.", i:"Bancos e empresas sérias não pedem senha, código do app nem instalação de programa de acesso remoto.", f:"Desligue, bloqueie o número e ligue para a empresa pelo telefone oficial (verso do cartão ou site oficial)."},
+    {t:"Clonagem de WhatsApp", d:"O golpista pede o código de 6 dígitos que chegou por SMS, fingindo ser um conhecido, a operadora ou o suporte.", i:"Ninguém legítimo precisa desse código. Ele dá controle total da sua conta.", f:"Nunca compartilhe o código. Ative a verificação em duas etapas do WhatsApp agora."},
+    {t:"Falsa promoção ou prêmio", d:"\"Você ganhou!\" ou \"oferta só hoje\" — pedem dados ou um pequeno pagamento para liberar o prêmio.", i:"Prêmio de sorteio em que você não participou, pressa e pagamento para receber.", f:"Não pague para receber prêmio. Confirme a promoção no site oficial da empresa."},
+    {t:"Ransomware (sequestro de dados)", d:"Um programa criptografa seus arquivos e exige pagamento para devolver o acesso. Chega por e-mail falso ou programa pirata.", i:"Arquivos que não abrem, extensões estranhas e uma tela exigindo pagamento.", f:"Desconecte o aparelho da internet e procure um profissional. O backup testado é a melhor defesa. Pagar não garante a devolução."},
+    {t:"Perfil falso em redes sociais", d:"Criam um perfil igual ao seu (ou de alguém próximo) e pedem dinheiro ou dados aos contatos.", i:"Conta nova com poucos amigos, pedido urgente de dinheiro, história estranha.", f:"Ligue para a pessoa em um número que você já tem. Denuncie o perfil na plataforma."},
+    {t:"Golpe do amor / romance", d:"Perfil falso em app de relacionamento cria vínculo e depois pede dinheiro para viagem, doença ou \"investimento\".", i:"Nunca faz chamada de vídeo, declara amor muito rápido e sempre surge uma emergência financeira.", f:"Não envie dinheiro a quem nunca conheceu pessoalmente. Denuncie o perfil."},
+    {t:"Boleto falso", d:"Boleto com dados adulterados em que o beneficiário é outra pessoa ou empresa.", i:"Nome do beneficiário diferente do esperado ou código de barras que não confere com o número do documento.", f:"Pague pelo app do banco, conferindo o beneficiário. Se pagou errado, acione o banco imediatamente."},
+    {t:"Falso funcionário do banco", d:"Alguém diz que sua conta foi invadida e pede que você transfira o dinheiro para uma \"conta segura\" — que é do golpista.", i:"Banco nenhum pede transferência para conta segura, senha completa ou token.", f:"Desligue e ligue para o número oficial do banco. Se precisar, vá à agência."}
+  ];
+  var gl = document.getElementById('golpesList');
+  gl.innerHTML = golpes.map(function(g){
+    return '<div class="faqitem"><button class="faqq" aria-expanded="false"><span>'+g.t+'</span><span class="arrow" aria-hidden="true">▼</span></button>'+
+      '<div class="faqa"><p style="margin:8px 0;"><strong style="color:var(--text);">Como funciona:</strong> '+g.d+'</p>'+
+      '<p style="margin:8px 0;"><strong style="color:var(--warn);">Como identificar:</strong> '+g.i+'</p>'+
+      '<p style="margin:8px 0;"><strong style="color:var(--ok);">O que fazer:</strong> '+g.f+'</p></div></div>';
+  }).join('');
+
+  /* ---------- Mitos ---------- */
+  var mitos = [
+    {m:"Usar VPN me torna completamente anônimo", r:"A VPN esconde seu IP do site e do provedor, mas a própria VPN pode ver e registrar sua atividade, e você continua identificável se fizer login ou fornecer dados. Aumenta a privacidade; não garante anonimato.", tipo:"Mito"},
+    {m:"Antivírus instalado = estou totalmente protegido", r:"O antivírus ajuda contra ameaças conhecidas, mas não impede golpes de engenharia social (você entrega a senha) nem todas as ameaças novas. É uma camada, não a única.", tipo:"Mito"},
+    {m:"Modo anônimo = ninguém sabe o que faço", r:"O modo anônimo apenas não guarda histórico no seu aparelho. Sites, provedor de internet e a rede de trabalho ou escola ainda podem registrar o acesso.", tipo:"Mito"},
+    {m:"Site com cadeado (HTTPS) é seguro e confiável", r:"O cadeado indica conexão criptografada, mas golpistas também usam HTTPS. Verifique o domínio e a reputação do site.", tipo:"Mito"},
+    {m:"Senha forte garante que minha conta nunca será invadida", r:"Se você reutilizar a senha, cair em phishing ou o serviço vazar dados, a força da senha não ajuda. Use senha única por conta + 2FA.", tipo:"Mito"},
+    {m:"Meu site é pequeno, ninguém vai atacar", r:"Ataques são automatizados e varrem a internet atrás de qualquer brecha. Sites pequenos costumam ter menos proteção, o que os torna alvos fáceis.", tipo:"Mito"},
+    {m:"Celular não pega vírus", r:"Android e iPhone também sofrem com golpes e apps maliciosos. O iOS é mais restrito, mas o phishing funciona em qualquer sistema.", tipo:"Mito"},
+    {m:"Não tenho nada importante, não preciso me proteger", r:"Seus contatos, número e identidade podem ser usados para aplicar golpes em outras pessoas ou abrir contas em seu nome.", tipo:"Mito"},
+    {m:"Senha longa é melhor do que senha cheia de símbolos", r:"Em geral, sim: o tamanho pesa mais que a complexidade. Uma frase longa e única é mais forte e mais fácil de lembrar do que uma sequência curta de símbolos.", tipo:"Verdade"},
+    {m:"Manter sistema e apps atualizados é fundamental", r:"Boa parte dos ataques usa falhas que já têm correção disponível. Ative as atualizações automáticas: é uma das medidas mais simples e eficazes.", tipo:"Verdade"}
+  ];
+  var ml = document.getElementById('mitosList');
+  ml.innerHTML = mitos.map(function(x){
+    var cor = x.tipo === 'Mito' ? 'b-danger' : 'b-ok';
+    return '<div class="faqitem"><button class="faqq" aria-expanded="false"><span>'+x.m+'</span><span style="display:flex;gap:10px;align-items:center;"><span class="badge '+cor+'">'+x.tipo+'</span><span class="arrow" aria-hidden="true">▼</span></span></button><div class="faqa"><p style="margin:8px 0;">'+x.r+'</p></div></div>';
+  }).join('');
+
+  /* ---------- Verificador ---------- */
+  var ICON_OK  = '<svg class="checkicon" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+  var ICON_BAD = '<svg class="checkicon" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>';
+  var ICON_MAN = '<svg class="checkicon" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>';
+
+  var manual = [
+    {name:'Certificado SSL/TLS válido e atualizado', risk:'Crítico', cat:'Conexão', fix:'Verifique validade e cadeia do certificado. Ative renovação automática (ex.: Let\'s Encrypt).'},
+    {name:'HSTS — forçar HTTPS', risk:'Alto', cat:'Cabeçalhos', fix:'Adicione o cabeçalho <code>Strict-Transport-Security: max-age=31536000; includeSubDomains</code>.'},
+    {name:'X-Frame-Options / frame-ancestors — evitar clickjacking', risk:'Alto', cat:'Cabeçalhos', fix:'Adicione <code>X-Frame-Options: SAMEORIGIN</code> ou use <code>frame-ancestors</code> na CSP.'},
+    {name:'X-Content-Type-Options', risk:'Médio', cat:'Cabeçalhos', fix:'Adicione <code>X-Content-Type-Options: nosniff</code>.'},
+    {name:'Content-Security-Policy', risk:'Alto', cat:'Cabeçalhos', fix:'Defina uma política que permita scripts apenas de origens confiáveis. Comece em modo <code>Content-Security-Policy-Report-Only</code> para testar.'},
+    {name:'Referrer-Policy e Permissions-Policy', risk:'Baixo', cat:'Cabeçalhos', fix:'Use <code>Referrer-Policy: strict-origin-when-cross-origin</code> e restrinja recursos do navegador que o site não usa.'},
+    {name:'Proteção contra XSS na aplicação', risk:'Alto', cat:'Aplicação', fix:'Escape toda saída que contenha dados do usuário e valide as entradas no servidor.'},
+    {name:'Versão do servidor oculta', risk:'Médio', cat:'Configuração', fix:'Apache: <code>ServerTokens Prod</code>. Nginx: <code>server_tokens off;</code>.'},
+    {name:'Listagem de diretórios desativada', risk:'Alto', cat:'Configuração', fix:'Apache: <code>Options -Indexes</code>. Nginx: <code>autoindex off;</code>.'},
+    {name:'Arquivos sensíveis não expostos (.env, .git, .sql, .bak)', risk:'Crítico', cat:'Exposição', fix:'Remova esses arquivos do diretório público ou bloqueie o acesso no servidor.'},
+    {name:'Formulários com HTTPS e proteção CSRF', risk:'Alto', cat:'Formulários', fix:'Garanta que o <code>action</code> use HTTPS e que formulários que alteram dados tenham token anti-CSRF.'},
+    {name:'Cookies com Secure, HttpOnly e SameSite', risk:'Alto', cat:'Aplicação', fix:'Defina os atributos <code>Secure; HttpOnly; SameSite=Lax</code> nos cookies de sessão.'}
+  ];
+
+  function esc(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+  function parseUrl(raw){
+    raw = (raw||'').trim();
+    if(!raw || /\s/.test(raw)) return null;
+    var withProto = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : 'https://' + raw;
+    // Se o usuário digitou http:// explicitamente, preservamos para avaliar.
+    var u;
+    try { u = new URL(withProto); } catch(e){ return null; }
+    if(u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+    var host = u.hostname;
+    var isIp = /^\d{1,3}(\.\d{1,3}){3}$/.test(host) || host.indexOf(':') !== -1;
+    if(!isIp && host.indexOf('.') === -1) return null;
+    return {url:u, host:host, isIp:isIp, typedProto:/^[a-z][a-z0-9+.-]*:\/\//i.test(raw)};
+  }
+
+  function autoChecks(p){
+    var host = p.host, u = p.url, list = [];
+    var https = u.protocol === 'https:';
+    list.push({name:'Usa conexão segura (HTTPS)', risk:'Crítico', cat:'Conexão', ok:https,
+      d: https ? 'A URL usa HTTPS.' : 'A URL usa HTTP, sem criptografia. Dados podem ser interceptados.',
+      fix: https ? '' : 'Instale um certificado (ex.: Let\'s Encrypt) e redirecione todo o tráfego HTTP para HTTPS.'});
+
+    list.push({name:'Domínio não é um endereço IP numérico', risk:'Médio', cat:'Domínio', ok:!p.isIp,
+      d: p.isIp ? 'Endereços IP no lugar de um domínio são comuns em sites temporários ou fraudulentos.' : 'O site usa um nome de domínio.',
+      fix: p.isIp ? 'Registre um domínio próprio e confiável para o site.' : ''});
+
+    var tld = /\.(tk|ml|ga|cf|gq|zip|mov)$/i.test(host);
+    list.push({name:'Extensão (TLD) sem histórico de abuso frequente', risk:'Baixo', cat:'Domínio', ok:!tld,
+      d: tld ? 'Esta extensão é frequentemente associada a abuso e golpes.' : 'A extensão não está em listas de alto abuso.',
+      fix: tld ? 'Considere uma extensão consolidada (.com, .com.br, .org, .net).' : ''});
+
+    var hy = (host.match(/-/g)||[]).length, labels = host.split('.').length;
+    var odd = !p.isIp && (hy > 3 || labels > 5);
+    list.push({name:'Estrutura do domínio sem excesso de hífens ou subdomínios', risk:'Médio', cat:'Domínio', ok:!odd,
+      d: odd ? 'Muitos hífens ou subdomínios é um padrão comum em endereços de phishing.' : 'A estrutura do domínio parece normal.',
+      fix: odd ? 'Prefira um domínio curto e fácil de reconhecer.' : ''});
+
+    var puny = /(^|\.)xn--/i.test(host);
+    list.push({name:'Sem caracteres disfarçados (punycode)', risk:'Médio', cat:'Domínio', ok:!puny,
+      d: puny ? 'O domínio usa codificação internacional (xn--), que pode imitar letras de outros domínios.' : 'Nenhum indício de domínio com caracteres imitados.',
+      fix: puny ? 'Se não é intencional, confira se o domínio não está imitando outra marca.' : ''});
+
+    var cred = !!(u.username || u.password) || /@/.test(u.href.split('?')[0].replace(/^https?:\/\//,'').split('/')[0]);
+    list.push({name:'URL sem credenciais embutidas (usuário@)', risk:'Médio', cat:'URL', ok:!cred,
+      d: cred ? 'URLs com "usuário@" são usadas para disfarçar o destino real do link.' : 'A URL não contém credenciais embutidas.',
+      fix: cred ? 'Remova credenciais da URL; nunca divulgue links nesse formato.' : ''});
+
+    var port = u.port && u.port !== '80' && u.port !== '443';
+    list.push({name:'Sem porta não padrão exposta', risk:'Baixo', cat:'URL', ok:!port,
+      d: port ? 'A URL usa a porta '+esc(u.port)+', incomum para sites públicos.' : 'A URL usa as portas padrão.',
+      fix: port ? 'Sites públicos normalmente usam as portas 80/443; confirme se a porta precisa ficar exposta.' : ''});
+    return list;
+  }
+
+  function row(c, icon, badge, withFix){
+    return '<div class="checkrow">'+icon+'<div class="checktxt"><div class="t">'+c.name+' '+badge+' <small>· Risco: '+c.risk+' · '+c.cat+'</small></div>'+
+      (c.d ? '<div class="d">'+c.d+'</div>' : '')+
+      (withFix && c.fix ? '<div class="fix"><strong>Como corrigir:</strong> '+c.fix+'</div>' : '')+'</div></div>';
+  }
+
+  var ICON_INFO = '<svg class="checkicon" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>';
+  var API_URL = window.AEGIS_API || '/api/scan';
+  var STATUS = {
+    ok:   {icon: ICON_OK,   badge: '<span class="badge b-ok">Aprovado</span>'},
+    warn: {icon: ICON_MAN,  badge: '<span class="badge b-warn">Melhorar</span>'},
+    fail: {icon: ICON_BAD,  badge: '<span class="badge b-danger">Falhou</span>'},
+    info: {icon: ICON_INFO, badge: '<span class="badge b-info">Informativo</span>'}
+  };
+  var CAT_ORDER = ['Conexão','Cabeçalhos','Aplicação','Configuração','Boas práticas'];
+
+  function showWarn(msg){
+    var w = document.getElementById('urlWarn');
+    w.textContent = msg; w.style.display = 'block';
+  }
+
+  function renderApi(d){
+    var ok = 0, warn = 0, fail = 0;
+    d.checks.forEach(function(c){ if(c.status==='ok') ok++; else if(c.status==='warn') warn++; else if(c.status==='fail') fail++; });
+    var color = d.score >= 80 ? '#34d399' : (d.score >= 50 ? '#fbbf24' : '#f87171');
+    var sc = document.getElementById('apiScore');
+    sc.textContent = d.score; sc.style.borderColor = color; sc.style.color = color;
+    var g = document.getElementById('apiGrade'); g.textContent = d.grade; g.style.color = color; g.style.borderColor = color;
+    document.getElementById('apiLabel').textContent = d.score >= 80 ? 'Boa base de segurança' : (d.score >= 50 ? 'Há pontos importantes para corrigir' : 'Vários pontos precisam de correção urgente');
+    document.getElementById('apiHost').textContent = d.host;
+    document.getElementById('apiOk').textContent = ok;
+    document.getElementById('apiWarn').textContent = warn;
+    document.getElementById('apiFail').textContent = fail;
+    var when = new Date(d.scannedAt).toLocaleString('pt-BR');
+    document.getElementById('apiMeta').textContent = 'Analisado em ' + when + ' · resposta HTTP ' + d.httpStatus + ' em ' + d.responseMs + ' ms' + (d.redirects.length > 1 ? ' · ' + (d.redirects.length-1) + ' redirecionamento(s)' : '');
+
+    var cats = CAT_ORDER.filter(function(cat){ return d.checks.some(function(c){return c.cat===cat;}); });
+    d.checks.forEach(function(c){ if(cats.indexOf(c.cat)===-1) cats.push(c.cat); });
+    document.getElementById('apiGroups').innerHTML = cats.map(function(cat, idx){
+      var rows = d.checks.filter(function(c){ return c.cat===cat; }).map(function(c){
+        var s = STATUS[c.status] || STATUS.info;
+        return '<div class="checkrow">'+s.icon+'<div class="checktxt"><div class="t">'+esc(c.name)+' '+s.badge+' <small>· Risco: '+esc(c.risk)+'</small></div>'+
+          '<div class="d">'+esc(c.detail)+'</div>'+
+          (c.fix && c.status !== 'ok' ? '<div class="fix"><strong>Como corrigir:</strong> '+c.fix+'</div>' : '')+'</div></div>';
+      }).join('');
+      return '<h3 class="sub2" style="'+(idx===0?'margin-top:0;':'')+'">'+esc(cat)+'</h3><div class="card">'+rows+'</div>';
+    }).join('');
+    document.getElementById('resultBox').style.display = 'none';
+    document.getElementById('apiBox').style.display = 'block';
+  }
+
+  function runOffline(p, banner){
+    var auto = autoChecks(p);
+    var ok = auto.filter(function(c){return c.ok;}).length;
+    var bad = auto.length - ok;
+    document.getElementById('offlineBanner').innerHTML = banner;
+    document.getElementById('scoreUrl').textContent = p.host;
+    document.getElementById('nOk').textContent = ok;
+    document.getElementById('nBad').textContent = bad;
+    document.getElementById('nManual').textContent = manual.length;
+    document.getElementById('scoreLabel').textContent = bad === 0
+      ? 'Nenhum alerta nas checagens automáticas. Confira agora o checklist do servidor.'
+      : 'Foram encontrados alertas nas checagens automáticas. Veja como corrigir abaixo.';
+    document.getElementById('autoList').innerHTML = auto.map(function(c){
+      return row(c, c.ok ? ICON_OK : ICON_BAD, c.ok ? '<span class="badge b-ok">Aprovado</span>' : '<span class="badge b-danger">Alerta</span>', true);
+    }).join('');
+    document.getElementById('manualList').innerHTML = manual.map(function(c){
+      return row(c, ICON_MAN, '<span class="badge b-warn">Conferir</span>', true);
+    }).join('');
+    var enc = encodeURIComponent(p.host);
+    var tools = [
+      ['Cabeçalhos HTTP — SecurityHeaders','https://securityheaders.com/?q='+enc+'&followRedirects=on'],
+      ['Certificado e TLS — SSL Labs','https://www.ssllabs.com/ssltest/analyze.html?d='+enc],
+      ['Padrões modernos — Hardenize','https://www.hardenize.com/report/'+enc]
+    ];
+    document.getElementById('toolBtns').innerHTML = tools.map(function(t){
+      return '<a class="btn btn2" style="margin-left:0;" target="_blank" rel="noopener noreferrer" href="'+t[1]+'">'+t[0]+'</a>';
+    }).join('');
+    document.getElementById('apiBox').style.display = 'none';
+    document.getElementById('resultBox').style.display = 'block';
+  }
+
+  var form = document.getElementById('scanForm');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var warn = document.getElementById('urlWarn');
+    warn.style.display = 'none';
+    var p = parseUrl(document.getElementById('urlInput').value);
+    if(!p){ showWarn('Digite uma URL válida (ex.: https://seusite.com.br).'); return; }
+    if(!document.getElementById('authBox').checked){ showWarn('Marque a declaração de autorização para continuar.'); return; }
+
+    var btn = document.getElementById('scanBtn');
+    var pw = document.getElementById('progressWrap'), pb = document.getElementById('progressBar');
+    btn.disabled = true; btn.textContent = 'Analisando...';
+    document.getElementById('apiBox').style.display = 'none';
+    document.getElementById('resultBox').style.display = 'none';
+    pw.style.display = 'block'; pb.style.width = '5%';
+    var pct = 5;
+    var timer = setInterval(function(){ pct = Math.min(92, pct + (92 - pct) * 0.08); pb.style.width = pct + '%'; }, 300);
+
+    var ctrl = new AbortController();
+    var to = setTimeout(function(){ ctrl.abort(); }, 30000);
+
+    function end(){
+      clearInterval(timer); clearTimeout(to);
+      pb.style.width = '100%';
+      setTimeout(function(){ pw.style.display = 'none'; }, 250);
+      btn.disabled = false; btn.textContent = 'Verificar novamente';
+    }
+    function show(){ var b = document.getElementById(document.getElementById('apiBox').style.display === 'block' ? 'apiBox' : 'resultBox'); b.scrollIntoView({behavior:'smooth', block:'start'}); }
+
+    fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({url: p.url.origin, authorized: true}),
+      signal: ctrl.signal
+    }).then(function(r){
+      var type = r.headers.get('content-type') || '';
+      if(type.indexOf('application/json') === -1){ var err = new Error('no-api'); err.noApi = true; throw err; }
+      return r.json().then(function(data){ return {status: r.status, data: data}; });
+    }).then(function(r){
+      end();
+      if(r.status === 200 && r.data && r.data.checks){ renderApi(r.data); show(); }
+      else { showWarn((r.data && r.data.error) || 'Não foi possível analisar este site agora.'); }
+    }).catch(function(err){
+      end();
+      var banner = err && err.noApi
+        ? '<strong>Servidor de análise não encontrado.</strong> Você abriu a página sem o backend (por exemplo, como arquivo local). Mostrando o modo básico: apenas checagens da URL e um checklist. Para a análise real, publique o projeto conforme o README.'
+        : '<strong>Não foi possível contatar o servidor de análise.</strong> Mostrando o modo básico (checagens da URL e checklist). Tente novamente em instantes.';
+      runOffline(p, banner); show();
+    });
+  });
+})();
+</script>
+</body>
+</html>
